@@ -50,19 +50,10 @@ export default function Registre(){
                 </Text>
                 <TextInput
                     placeholder='Digite sua senha'
-                    secureTextEntry={true}
+                    secureTextEntry = {true}
                     style={styles.inputTxt}
                 />
-
-                <Text style={styles.titleForm}>
-                    Confirmação de Senha
-                </Text>
-                <TextInput
-                    placeholder='Confirme sua senha'
-                    secureTextEntry={true}
-                    style={styles.inputTxt}
-                />
-
+                
                 <TouchableOpacity
                     style={styles.btn}
                 >

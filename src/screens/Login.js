@@ -1,10 +1,15 @@
 import {View, StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native'
+import { Ionicons } from '@expo/vector-icons'; 
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import { AntDesign } from '@expo/vector-icons'; 
 
 
 export default function Login(){
+    
     const navigation = useNavigation()
+    const [adm, setAdm] = useState(false)
 
     return(
         <View style={styles.container}>
@@ -21,6 +26,15 @@ export default function Login(){
                 style={styles.containerForm}
             
             >
+                <View style={styles.boxAdm}>
+                    <Ionicons name={adm ? "person" : "people"} size={30} color='#ff8c00' />
+                    <Text style={styles.textAdm}>{adm ? "ADMINISTRADOR" : "CLIENTE"}</Text>
+                    <TouchableOpacity
+                        onPress={() => setAdm(!adm)}
+                        >
+                        <AntDesign name="arrowright" style = {{marginLeft: 25}} size={30} color='#ff8c00' />
+                    </TouchableOpacity>
+                </View>
                 <Text style={styles.titleForm}>
                     Email
                 </Text>
@@ -33,12 +47,19 @@ export default function Login(){
                     Senha:
                 </Text>
                 <TextInput
-                    placeholder='Digite sua senha'
+                    secureTextEntry = {true}
+                    placeholder = 'Digite sua senha'
                     style={styles.inputTxt}
                 />
 
                 <TouchableOpacity
                     style={styles.btn}
+                    onPress = {() => {
+                        if(adm)
+                            navigation.navigate('AdmScreen')
+                        else
+                            navigation.navigate('ScreenMain')
+                    }}
                 >
                     <Text style={{color: '#fff', fontSize: 18, fontWeight: 'bold'}}>
                         Acessar
@@ -119,5 +140,18 @@ const styles = StyleSheet.create({
     btnCdsTxt:{
         color: 'gray',
         textAlign: 'center'
+    },
+
+    boxAdm:{
+        marginTop: 28,
+        flexDirection: 'row'
+    },
+
+    textAdm:{
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginLeft: 15,
+        color: '#ff8c00',
+        width: 180
     }
 })
