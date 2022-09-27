@@ -1,8 +1,9 @@
 import {View, StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native'
+import { useState } from 'react';
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native';
 
-export default function Registre(){
+export default function Registre(props){
 
     const navigation = useNavigation()
 

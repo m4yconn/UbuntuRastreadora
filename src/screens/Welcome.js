@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     },
 
     containerMessage:{
-        height: '32%',
+        height: '35.5%',
         width: '100%',
         marginTop: '45%',
         backgroundColor: 'white',
