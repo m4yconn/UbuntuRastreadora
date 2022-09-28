@@ -1,15 +1,48 @@
-import {View, StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native'
+import {View, StyleSheet, Text, TextInput, TouchableOpacity, Alert} from 'react-native'
 import { Ionicons } from '@expo/vector-icons'; 
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { AntDesign } from '@expo/vector-icons'; 
 
+import {getAuth, signInWithEmailAndPassword} from 'firebase/auth'
+import {initializeApp} from 'firebase/app'
+import { firebaseConfig } from '../../firebase-config';
+
 
 export default function Login(){
     
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const app = initializeApp(firebaseConfig)
+    const auth = getAuth(app)
     const navigation = useNavigation()
     const [adm, setAdm] = useState(false)
+
+    const signIn = () => {
+        signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+            console.log("Conta Logada")
+            const user = userCredential.user
+
+            if(adm)
+                navigation.navigate('AdmScreen')
+            else
+                navigation.navigate('ScreenMain')
+
+            console.log(user)
+        })
+        .catch(error => {
+            console.log(error)
+
+            if(error.code === 'auth/invalid-password')
+                Alert.alert("Senha inválida")
+            if(error.code === 'auth/invalid-email')
+                Alert.alert("Email inválido")
+            else
+                Alert.alert(error)
+        })
+    }
 
     return(
         <View style={styles.container}>
@@ -39,6 +72,10 @@ export default function Login(){
                     Email
                 </Text>
                 <TextInput
+                    onChangeText={(text) => {
+                        setEmail(text)
+                    }}
+
                     placeholder='Digite seu email'
                     style={styles.inputTxt}
                 />
@@ -47,6 +84,10 @@ export default function Login(){
                     Senha:
                 </Text>
                 <TextInput
+                    onChangeText={(text) => {
+                        setPassword(text)
+                    }}
+
                     secureTextEntry = {true}
                     placeholder = 'Digite sua senha'
                     style={styles.inputTxt}
@@ -55,10 +96,7 @@ export default function Login(){
                 <TouchableOpacity
                     style={styles.btn}
                     onPress = {() => {
-                        if(adm)
-                            navigation.navigate('AdmScreen')
-                        else
-                            navigation.navigate('ScreenMain')
+                        signIn()
                     }}
                 >
                     <Text style={{color: '#fff', fontSize: 18, fontWeight: 'bold'}}>

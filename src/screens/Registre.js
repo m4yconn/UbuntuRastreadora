@@ -1,11 +1,43 @@
-import {View, StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native'
+import {View, StyleSheet, Text, TextInput, TouchableOpacity, Alert} from 'react-native'
 import { useState } from 'react';
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native';
 
+import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth'
+import {initializeApp} from 'firebase/app'
+import { firebaseConfig } from '../../firebase-config';
+
 export default function Registre(props){
 
+    const [userName, setUserName] = useState('')
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const app = initializeApp(firebaseConfig)
+    const auth = getAuth(app)
     const navigation = useNavigation()
+
+    const createUser = () => {
+        createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+
+            Alert.alert("Conta criada")
+            navigation.navigate("Login")
+            console.log("Conta criada")
+            const user = userCredential.user
+            console.log(user)
+
+
+        })
+        .catch(error => {
+            console.log(error)
+            Alert.alert("Houve um error")
+
+            if(error.code === 'auth/email-already-in-use')
+                Alert.alert("Email já existe")
+
+        })
+    }
 
     return(
         <View style={styles.container}>
@@ -26,6 +58,9 @@ export default function Registre(props){
                     Nome
                 </Text>
                 <TextInput
+                    onChangeText={text => {
+                        setName(text)
+                    }}
                     placeholder='Digite seu Nome'
                     style={styles.inputTxt}
                 />
@@ -34,6 +69,9 @@ export default function Registre(props){
                     Nome de Usuário
                 </Text>
                 <TextInput
+                    onChangeText={text => {
+                        setUserName(text)
+                    }}
                     placeholder='Digite seu nome de usuário'
                     style={styles.inputTxt}
                 />
@@ -42,6 +80,9 @@ export default function Registre(props){
                     Email
                 </Text>
                 <TextInput
+                    onChangeText={text => {
+                        setEmail(text)
+                    }}
                     placeholder='Digite seu email'
                     style={styles.inputTxt}
                 />
@@ -50,6 +91,9 @@ export default function Registre(props){
                     Senha
                 </Text>
                 <TextInput
+                    onChangeText={text => {
+                        setPassword(text)
+                    }}
                     placeholder='Digite sua senha'
                     secureTextEntry = {true}
                     style={styles.inputTxt}
@@ -57,6 +101,14 @@ export default function Registre(props){
                 
                 <TouchableOpacity
                     style={styles.btn}
+                    onPress = {() => {
+                        if(name.length < 8|| userName.length < 8){
+                            Alert.alert("Nome e nome de usuário precisam ter pelo menos 8 caracteres")
+                            console.log("Nome e nome de usuário precisam ter pelo menos 8 caracteres")
+                        }
+                        else
+                            createUser()
+                    }}
                 >
                     <Text style={{color: '#fff', fontSize: 18, fontWeight: 'bold'}}>
                         Cadastrar

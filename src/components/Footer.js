@@ -10,7 +10,7 @@ export default function Footer(){
 
 const styles = StyleSheet.create({
     container:{
-        height: '7.5%',
+        height: '10%',
         backgroundColor: "#ff8c00",
         justifyContent: 'center',
         alignItems: 'center'
